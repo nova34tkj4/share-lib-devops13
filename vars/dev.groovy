@@ -34,9 +34,6 @@ def call(Map config) {
                             # 3. Jalankan container baru (sesuaikan port -p jika berbeda)
                             docker run -d --name servicea-container -p 3000:3000 nhkwardana30/${SERVICE}:latest
                             
-                            # 4. Bersihkan image usang agar storage tidak penuh
-                            docker image prune -f
-    EOF
                     """
                 }
             }
