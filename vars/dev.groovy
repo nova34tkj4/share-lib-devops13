@@ -23,7 +23,7 @@ def call(Map config) {
                 steps {
                     // Langsung eksekusi perintah ssh tanpa wrapper plugin apapun
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@34.21.207.243 << 'EOF'
+                        ssh -o StrictHostKeyChecking=no ubuntu@136.85.30.24 << 'EOF'
                             # 1. Tarik image terbaru dari Docker Hub
                             docker pull nhkwardana30/${SERVICE}:latest
                             
