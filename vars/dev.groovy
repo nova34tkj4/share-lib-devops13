@@ -1,7 +1,6 @@
 def call(Map config) {
     // Definisikan URL Webhook Discord Anda di sini
-    def discordWebhookUrl = "https://discord.com/api/webhooks/1557751335665803284/FQBI2Uxi71D6v7RHOWNUpjywwCf6D0oEMI5zH3Ld3VNDU1VgQMvozw23l2wa0qhNb-jI
-"
+    def discordWebhookUrl = "https://discord.com/api/webhooks/1557751335665803284/FQBI2Uxi71D6v7RHOWNUpjywwCf6D0oEMI5zH3Ld3VNDU1VgQMvozw23l2wa0qhNb-jI"
 
     pipeline {
         agent any
