@@ -22,7 +22,7 @@ def call(Map config) {
             stage('deploy') {
                 steps {
                     // Langsung eksekusi perintah ssh tanpa wrapper plugin apapun
-                    sh '''
+                    sh """
                         ssh -o StrictHostKeyChecking=no ubuntu@136.85.30.24 << 'EOF'
                             # 1. Tarik image terbaru dari Docker Hub
                             docker pull nhkwardana30/${SERVICE}:latest
@@ -37,7 +37,7 @@ def call(Map config) {
                             # 4. Bersihkan image usang agar storage tidak penuh
                             docker image prune -f
     EOF
-                    '''
+                    """
                 }
             }
         }
