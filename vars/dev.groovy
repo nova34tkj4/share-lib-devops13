@@ -1,8 +1,22 @@
 def call(Map config) {
+    // Definisikan URL Webhook Discord Anda di sini
+    def discordWebhookUrl = "https://discord.com/api/webhooks/1557751335665803284/FQBI2Uxi71D6v7RHOWNUpjywwCf6D0oEMI5zH3Ld3VNDU1VgQMvozw23l2wa0qhNb-jI
+"
+
     pipeline {
         agent any
 
         stages {
+            stage('Start Notification') {
+                steps {
+                    sh """
+                        curl -H "Content-Type: application/json" \
+                        -X POST \
+                        -d '{"embeds": [{"title": "🚀 CI/CD Pipeline Started", "description": "Pipeline untuk **${SERVICE}** telah dimulai.", "color": 3447003}]}' \
+                        ${discordWebhookUrl}
+                    """
+                }
+            }
             stage('checkout') {
                 steps {
                     checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/nova34tkj4/devops13-appB.git']])
@@ -21,21 +35,35 @@ def call(Map config) {
             }
             stage('deploy') {
                 steps {
-                    // Langsung eksekusi perintah ssh tanpa wrapper plugin apapun
                     sh """
                         ssh -o StrictHostKeyChecking=no ubuntu@136.85.30.24 << 'EOF'
-                            # 1. Tarik image terbaru dari Docker Hub
                             docker pull nhkwardana30/${SERVICE}:latest
-                            
-                            # 2. Hentikan dan hapus container lama jika sedang berjalan
                             docker stop servicea-container || true
                             docker rm servicea-container || true
-                            
-                            # 3. Jalankan container baru (sesuaikan port -p jika berbeda)
                             docker run -d --name servicea-container -p 3000:3000 nhkwardana30/${SERVICE}:latest
-                            
+                        EOF
                     """
                 }
+            }
+        }
+
+        // Blok POST untuk mendeteksi status akhir dari seluruh stage di atas
+        post {
+            success {
+                sh """
+                    curl -H "Content-Type: application/json" \
+                    -X POST \
+                    -d '{"embeds": [{"title": "✅ CI/CD Pipeline Success", "description": "Pipeline untuk **${SERVICE}** berhasil diselesaikan dan dideploy ke server!", "color": 3066993}]}' \
+                    ${discordWebhookUrl}
+                """
+            }
+            failure {
+                sh """
+                    curl -H "Content-Type: application/json" \
+                    -X POST \
+                    -d '{"embeds": [{"title": "❌ CI/CD Pipeline Failed", "description": "Pipeline untuk **${SERVICE}** GAGAL pada build #${BUILD_NUMBER}. Silakan periksa log Jenkins.", "color": 15158332}]}' \
+                    ${discordWebhookUrl}
+                """
             }
         }
     }
