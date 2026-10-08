@@ -40,7 +40,6 @@ def call(Map config) {
                             docker stop servicea-container || true
                             docker rm servicea-container || true
                             docker run -d --name servicea-container -p 3000:3000 nhkwardana30/${SERVICE}:latest
-                        EOF
                     """
                 }
             }
