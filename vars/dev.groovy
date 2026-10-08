@@ -10,7 +10,7 @@ def call(Map config) {
             }
             stage('build') {
                 steps {
-                    sh "docker build -t nhkwardana30/servicea-jenkins ."
+                    sh "docker build -t nhkwardana30/${SERVICE} ."
                 }
             }
             stage('push') {
