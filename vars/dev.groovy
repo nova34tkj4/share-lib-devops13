@@ -15,8 +15,8 @@ def call(Map config) {
             }
             stage('push') {
                 steps {
-                    sh "docker push nhkwardana30/servicea-jenkins"
-                    sh "docker rmi nhkwardana30/servicea-jenkins"
+                    sh "docker push nhkwardana30/${SERVICE}"
+                    sh "docker rmi nhkwardana30/${SERVICE}"
                 }
             }
             stage('deploy') {
@@ -25,14 +25,14 @@ def call(Map config) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@34.21.207.243 << 'EOF'
                             # 1. Tarik image terbaru dari Docker Hub
-                            docker pull nhkwardana30/servicea-jenkins:latest
+                            docker pull nhkwardana30/${SERVICE}:latest
                             
                             # 2. Hentikan dan hapus container lama jika sedang berjalan
                             docker stop servicea-container || true
                             docker rm servicea-container || true
                             
                             # 3. Jalankan container baru (sesuaikan port -p jika berbeda)
-                            docker run -d --name servicea-container -p 3000:3000 nhkwardana30/servicea-jenkins:latest
+                            docker run -d --name servicea-container -p 3000:3000 nhkwardana30/${SERVICE}:latest
                             
                             # 4. Bersihkan image usang agar storage tidak penuh
                             docker image prune -f
